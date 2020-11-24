@@ -27,13 +27,16 @@ func (p *Parser) Parse() LAS {
 
 func (p *Parser) parse(lasFile *LAS) {
 	var (
-		token    Token
-		comments string
-		line     *Line
-		sectn    *Section
+		token         Token
+		comments      string
+		line          *Line
+		sectn         *Section
+		isCustomSectn bool = false
 	)
 
-	panicIfLexerNotStarted(p.lex)
+    // If our lexer has not been started do not continue
+    panicIfLexerNotStarted(p.lex)
+    
 Loop:
 	for {
 		token = p.lex.NextToken()
@@ -64,10 +67,17 @@ Loop:
 
 		case TSectionCustom:
 			sectn = &Section{Name: strings.TrimSpace(token.Value)}
+			isCustomSectn = true
 
 		case TMnemonic:
-			line = &Line{}
-			line.Mnem = strings.TrimSpace(token.Value)
+			if isCustomSectn {
+				lasFile.CustomSections = append(lasFile.CustomSections, Section{Name: strings.TrimSpace(token.Value)})
+				isCustomSectn = false
+				continue
+			} else {
+                line = &Line{}
+                line.Mnem = strings.TrimSpace(token.Value)
+            }
 
 		case TUnits:
 			line.Units = strings.TrimSpace(token.Value)
@@ -80,10 +90,6 @@ Loop:
 			sectn.Data = append(sectn.Data, *line)
 			sectn.Comments = comments
 			comments = ""
-			if token.Type == TSectionCustom {
-				lasFile.CustomSections = append(lasFile.CustomSections, Section{Name: strings.TrimSpace(token.Value)})
-				continue
-			}
 
 		case TComment:
 			comments += token.Value

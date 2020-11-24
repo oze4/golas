@@ -8,25 +8,23 @@ import (
 
 // Lexer is a lexer
 type Lexer struct {
-	tokens           chan Token
+    char             rune
+    handler          HandlerFunc
 	isFirstDotOnLine bool
-	value            *bytes.Buffer
-	char             rune
 	line             int
 	linePosition     int
-	reader           *bufio.Reader
-	handler          HandlerFunc
+    reader           *bufio.Reader
+    tokens           chan Token
+    value            *bytes.Buffer
 }
 
 // NewLexer creates a new Lexer
 func NewLexer(r io.Reader) *Lexer {
-	lexer := Lexer{
+	return &Lexer{
 		reader: bufio.NewReader(r),
 		tokens: make(chan Token, 1),
 		value:  &bytes.Buffer{},
 	}
-
-	return &lexer
 }
 
 // NextToken reads the next token from our tokens chan
@@ -56,8 +54,6 @@ func (lexer *Lexer) Start() {
 func (lexer *Lexer) State() HandlerFunc {
 	return lexer.handler
 }
-
-// * Private methods *
 
 // emit places a token of type t on our tokens chan
 func (lexer *Lexer) emit(t TokenType) {
@@ -89,8 +85,7 @@ func (lexer *Lexer) step() {
 
 	if ch == Flags.NewLine {
 		lexer.line++
-		lexer.linePosition = 0
-		lexer.isFirstDotOnLine = false
+		lexer.linePosition, lexer.isFirstDotOnLine = 0, false
 	} else {
 		lexer.linePosition++
 	}
