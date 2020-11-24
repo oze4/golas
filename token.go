@@ -16,7 +16,6 @@ type Token struct {
 const (
 	TEndOfFile TokenType = iota
 	TComment
-	TValue
 	// Sections : Required
 	TVersionInformation
 	TWellInformation
