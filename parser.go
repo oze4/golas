@@ -57,8 +57,8 @@ Loop:
 		case TOther:
 			lasFile.Other, sectn = Section{Name: "Other"}, &lasFile.Other
 
-        case TASCIILogData:
-            break Loop
+		case TASCIILogData:
+			break Loop
 			//section = Section{Name: "ASCII Log Data"}
 			//las.ASCIILogData = LogData{Section{}}
 
@@ -76,14 +76,14 @@ Loop:
 			line.Data = strings.TrimSpace(token.Value)
 
 		case TDescription:
-            line.Description = strings.TrimSpace(token.Value)
-            sectn.Data = append(sectn.Data, *line)
+			line.Description = strings.TrimSpace(token.Value)
+			sectn.Data = append(sectn.Data, *line)
 			sectn.Comments = comments
-            comments = ""
-            if token.Type == TSectionCustom {
-                lasFile.CustomSections = append(lasFile.CustomSections, Section{Name: strings.TrimSpace(token.Value)})
-                continue
-            }
+			comments = ""
+			if token.Type == TSectionCustom {
+				lasFile.CustomSections = append(lasFile.CustomSections, Section{Name: strings.TrimSpace(token.Value)})
+				continue
+			}
 
 		case TComment:
 			comments += token.Value

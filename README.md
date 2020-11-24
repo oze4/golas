@@ -1,8 +1,9 @@
 # golas
 ### Geophysical well log lexer and parser
 
- - Easily convert geophysical well logs to JSON
- - Currently, we only support the [CWLS LAS 2.0](http://www.cwls.org/wp-content/uploads/2014/09/LAS_20_Update_Jan2014.pdf) standard
+ - Easily marshal our output to JSON/YAML
+ - We support:
+   - [CWLS LAS 2.0](http://www.cwls.org/wp-content/uploads/2014/09/LAS_20_Update_Jan2014.pdf) standard
 
 --- 
 
@@ -48,7 +49,7 @@ func TestNewLexer(t *testing.T) {
 }
 ```
 
-Which outputs
+Which gives us...
 
 ```
 ===========
