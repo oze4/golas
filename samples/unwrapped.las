@@ -5,18 +5,18 @@
 #MNEM.UNIT           DATA                    DESCRIPTION OF MNEMONIC
 #---------    -------------------            -------------------------------
 # Generated from Intellog Unique Number	CW_73_75/WELL/2722
-WELL.         CHEVRON MGSU 1 MITSUE 01-01    : Well_name    - WELL
+WELL.         NORVEHC MGSU 1 MITSUE 01-01    : Well_name    - WELL
 LOC .         00/01-01-073-05W5/0            : Location     - LOCATION
 UWI .         00/01-01-073-05W5/0            : Uwi          - UNIQUE WELL ID
-ENTR.         JAYE                           : Entered      - ENTERED BY
-SRVC.         SCHLUMBERGER                   : Scn          - SERVICE COMPANY
-DATE.         23 DEC 86                      : Date         - LOG DATE
+ENTR.         JOHN                           : Entered      - ENTERED BY
+SRVC.         REGREBMULHCS                   : Scn          - SERVICE COMPANY
+DATE.         01 JAN 70                      : Date         - LOG DATE
 STRT.M        390                            : top_depth    - START DEPTH
 STOP.M        650                            : bot_depth    - STOP DEPTH
 STEP.M        0.25                           : increment    - STEP LENGTH
  NULL. -999.2500:NULL Value
 ~CURVE INFORMATION BLOCK
-#MNEM UNIT       ERCB CURVE CODE    CURVE DESCRIPTION
+#MNEM.UNIT       ERCB CURVE CODE    CURVE DESCRIPTION
 #-----------   ------------------   ----------------------------------
 DEPT.M        00 001 00 00         : DEPTH        - DEPTH
 DPHI.V/V      00 890 00 00         : PHID         - DENSITY POROSITY (SANDSTONE)
@@ -47,6 +47,8 @@ RM  .OHMM     2.62                 : RM           - RESISTIVITY OF MUD
 RMC .OHMM     0                    : RMC          - RESISTIVITY OF MUD CAKE
 RMF .OHMM     1.02                 : RMF          - RESISTIVITY OF MUD FILTRATE
 SUFT.C        0                    : SUFT         - SURFACE TEMPERATURE
+~ZEBRA
+THIS.IS A: TEST
 ~A  DEPTH     PHID     PHIN       GR      CAL     RESD
   390.000    0.199    0.457   82.478  238.379    2.923
   390.250    0.208    0.456   86.413  238.331    2.925

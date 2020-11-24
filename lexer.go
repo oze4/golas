@@ -1,16 +1,14 @@
-package lexer
+package golas
 
 import (
 	"bufio"
 	"bytes"
 	"io"
-
-	"github.com/oze4/golas/pkg/token"
 )
 
 // Lexer is a lexer
 type Lexer struct {
-	Tokens           chan token.Token
+	tokens           chan Token
 	isFirstDotOnLine bool
 	value            *bytes.Buffer
 	char             rune
@@ -24,7 +22,7 @@ type Lexer struct {
 func NewLexer(r io.Reader) *Lexer {
 	lexer := Lexer{
 		reader: bufio.NewReader(r),
-		Tokens: make(chan token.Token, 1),
+		tokens: make(chan Token, 1),
 		value:  &bytes.Buffer{},
 	}
 
@@ -32,10 +30,10 @@ func NewLexer(r io.Reader) *Lexer {
 }
 
 // NextToken reads the next token from our tokens chan
-func (lexer *Lexer) NextToken() token.Token {
+func (lexer *Lexer) NextToken() Token {
 	for {
 		select {
-		case token := <-lexer.Tokens:
+		case token := <-lexer.tokens:
 			lexer.value.Reset()
 			return token
 		default:
@@ -62,16 +60,13 @@ func (lexer *Lexer) State() HandlerFunc {
 // * Private methods *
 
 // emit places a token of type t on our tokens chan
-func (lexer *Lexer) emit(t token.TokenType) {
-	lexer.Tokens <- token.Token{
-		Type:  t,
-		Value: lexer.value.String(),
-	}
+func (lexer *Lexer) emit(t TokenType) {
+	lexer.tokens <- Token{t, lexer.value.String()}
 }
 
-// ignoreRestOfLine reads from current line position until
+// dumpLine reads from current line position until
 // end of line, without writing to our value buffer
-func (lexer *Lexer) ignoreRestOfLine() {
+func (lexer *Lexer) dumpLine() {
 	for lexer.char != Flags.NewLine {
 		lexer.step()
 	}
@@ -110,4 +105,23 @@ func (lexer *Lexer) step() {
 
 	lexer.value.WriteRune(ch)
 	lexer.char = ch
+}
+
+// Flags are a rune representation of a TokenType
+var Flags = flags{
+	Comment:  '#',
+	Data:     ':',
+	Section:  '~',
+	EOF:      rune(-1),
+	NewLine:  '\n',
+	Mnemonic: '.',
+}
+
+type flags struct {
+	Comment  rune
+	Data     rune
+	Section  rune
+	EOF      rune
+	NewLine  rune
+	Mnemonic rune
 }

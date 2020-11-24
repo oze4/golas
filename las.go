@@ -1,7 +1,7 @@
-package file
+package golas
 
-// LASFile represents a .las file
-type LASFile struct {
+// LAS represents a .las file
+type LAS struct {
 	VersionInformation   Section
 	WellInformation      Section
 	CurveInformation     Section

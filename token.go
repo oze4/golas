@@ -1,4 +1,4 @@
-package token
+package golas
 
 // CWLS LAS 2.0 Standard
 // http://www.cwls.org/wp-content/uploads/2014/09/LAS_20_Update_Jan2014.pdf
