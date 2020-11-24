@@ -103,20 +103,18 @@ func (lexer *Lexer) step() {
 }
 
 // Flags are a rune representation of a TokenType
-var Flags = flags{
-	Comment:  '#',
-	Data:     ':',
-	Section:  '~',
-	EOF:      rune(-1),
-	NewLine:  '\n',
-	Mnemonic: '.',
-}
-
-type flags struct {
+var Flags = struct {
 	Comment  rune
 	Data     rune
 	Section  rune
 	EOF      rune
 	NewLine  rune
 	Mnemonic rune
+}{
+	Comment:  '#',
+	Data:     ':',
+	Section:  '~',
+	EOF:      rune(-1),
+	NewLine:  '\n',
+	Mnemonic: '.',
 }
