@@ -3,8 +3,9 @@ package golas
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"testing"
+
+	"github.com/oze4/golas/pkg/file"
 )
 
 func TestNewLexer(t *testing.T) {
@@ -15,13 +16,20 @@ func TestNewLexer(t *testing.T) {
 
 	las := Parse(r)
 
-	v := reflect.ValueOf(las)
-	tp := v.Type()
-
-	for i := 0; i < v.NumField(); i++ {
-		fmt.Println("\n", tp.Field(i).Name)
-		for _, i := range las.VersionInformation.Data {
-			fmt.Println("MNEM :", i.Mnem, "\nDATA :", i.Data, "\nUNITS :", i.Units, "\nDESC :", i.Description)
+	printData := func(data []file.Line) {
+		for _, line := range data {
+			fmt.Println("Mnemonic\t==", line.Mnem, "\nData\t\t==", line.Data, "\nUnits\t\t==", line.Units, "\nDesc\t\t==", line.Description)
 		}
 	}
+
+	fmt.Println("\nVersion Info")
+	printData(las.VersionInformation.Data)
+	fmt.Println("\nWell Info")
+	printData(las.WellInformation.Data)
+	fmt.Println("\nCurve Info")
+	printData(las.CurveInformation.Data)
+	fmt.Println("\n Param Info")
+	printData(las.ParameterInformation.Data)
+	fmt.Println("\nOther Info")
+	printData(las.Other.Data)
 }

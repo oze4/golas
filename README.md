@@ -1,21 +1,30 @@
 http://www.cwls.org/wp-content/uploads/2014/09/LAS_20_Update_Jan2014.pdf
 
-# Flags
+```golang
+// This test case is a good "hello world" example
+func TestHelloWorld(t *testing.T) {
+	r, e := os.Open("unwrapped.las")
+	if e != nil {
+		panic("Unable to open file")
+	}
 
-  - `~` (tilde)
-    - The ASCII equivalent of this flag is `&#126;`
-    - Only valid when it is the first non space character on a line
-    - The first letter directly after the tilde identifies the [section](#sections)
-  - `#` (pound)
-    - The ASCII equivalent of this flag is decimal `&#35;`
+	las := Parse(r)
 
-# Sections
+	printData := func(data []file.Line) {
+		for _, line := range data {
+			fmt.Println("Mnemonic\t==", line.Mnem, "\nData\t\t==", line.Data, "\nUnits\t\t==", line.Units, "\nDesc\t\t==", line.Description)
+		}
+	}
 
- - The first letter directly after the [tilde](#flags) identifies the section
- - The following upper case letters, in the space following a tilde, are reserved (the  remainder  of  the  line  will  be  treated  as  comments)
-   - "V"
-   - "W"
-   - "P"
-   - "C" 
-   - "O"
-   - "A"
+	fmt.Println("\nVersion Info")
+	printData(las.VersionInformation.Data)
+	fmt.Println("\nWell Info")
+	printData(las.WellInformation.Data)
+	fmt.Println("\nCurve Info")
+	printData(las.CurveInformation.Data)
+	fmt.Println("\n Param Info")
+	printData(las.ParameterInformation.Data)
+	fmt.Println("\nOther Info")
+	printData(las.Other.Data)
+}
+```

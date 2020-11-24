@@ -7,6 +7,7 @@ import (
 	"github.com/oze4/golas/pkg/parser"
 )
 
+// Parse parses las data
 func Parse(r io.Reader) file.LASFile {
 	p := parser.NewParser(r)
 	return p.Parse()

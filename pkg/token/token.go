@@ -15,37 +15,21 @@ type Token struct {
 // comment
 const (
 	TEndOfFile TokenType = iota
-	TSyntaxError
-
-	TIdentifier
+	TComment
 	TValue
-
-	// Flags
-	TComment // #
-	TTilde   // ~
-
 	// Sections : Required
 	TVersionInformation
 	TWellInformation
 	TCurveInformation
 	TASCIILogData
-
 	// Sections : Optional
 	TParameterInformation
 	TOther
-
 	// Sections : Custom
-	TSection
 	TSectionCustom
-
 	// Line Delimeters
 	TMnemonic
-	TSpace
 	TUnits
 	TData
 	TDescription
-
-	// Version Information
-	TVers
-	TWrap
 )
