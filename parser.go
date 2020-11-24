@@ -34,9 +34,9 @@ func (p *Parser) parse(lasFile *LAS) {
 		isCustomSectn bool = false
 	)
 
-    // If our lexer has not been started do not continue
-    panicIfLexerNotStarted(p.lex)
-    
+	// If our lexer has not been started do not continue
+	panicIfLexerNotStarted(p.lex)
+
 Loop:
 	for {
 		token = p.lex.NextToken()
@@ -75,9 +75,9 @@ Loop:
 				isCustomSectn = false
 				continue
 			} else {
-                line = &Line{}
-                line.Mnem = strings.TrimSpace(token.Value)
-            }
+				line = &Line{}
+				line.Mnem = strings.TrimSpace(token.Value)
+			}
 
 		case TUnits:
 			line.Units = strings.TrimSpace(token.Value)

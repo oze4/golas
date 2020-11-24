@@ -8,14 +8,14 @@ import (
 
 // Lexer is a lexer
 type Lexer struct {
-    char             rune
-    handler          HandlerFunc
+	char             rune
+	handler          HandlerFunc
 	isFirstDotOnLine bool
 	line             int
 	linePosition     int
-    reader           *bufio.Reader
-    tokens           chan Token
-    value            *bytes.Buffer
+	reader           *bufio.Reader
+	tokens           chan Token
+	value            *bytes.Buffer
 }
 
 // NewLexer creates a new Lexer
