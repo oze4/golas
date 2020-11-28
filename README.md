@@ -1,12 +1,13 @@
 # golas
 
-### Geophysical well log lexer and parser
+### Parse geophysical well logs (.las files)
 
+- Lexer & parser
 - Self contained
   - Uses stdlib only
   - No third party libraries
 - Easily marshal our output to JSON/YAML
-- We support:
+- Currently, we only support LAS 2.0:
   - [CWLS LAS 2.0](http://www.cwls.org/wp-content/uploads/2014/09/LAS_20_Update_Jan2014.pdf) standard
 
 ---
