@@ -85,7 +85,7 @@ func (l *Lexer) step() {
 
 // stepUntil reads from current line position until we read a certain rune
 func (l *Lexer) stepUntil(char rune) {
-	for l.char != '\n' {
+	for l.char != char {
 		l.step()
 	}
 }
