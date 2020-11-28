@@ -63,7 +63,7 @@ func (l *Lexer) overwriteBuffer(s string) {
 	l.buffer.WriteString(s)
 }
 
-// step consumes the next rune from the current line
+// step consumes the next rune from our reader
 func (l *Lexer) step() {
 	ch, _, err := l.reader.ReadRune()
 	if err != nil {
