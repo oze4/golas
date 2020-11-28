@@ -9,6 +9,8 @@
 
 # Example 
 
+The following example uses [this](/samples/unwrapped.las) .las file as input
+
 ```golang
 func TestNewLexer(t *testing.T) {
 	r, e := os.Open("samples/unwrapped.las")
