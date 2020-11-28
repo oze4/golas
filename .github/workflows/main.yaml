@@ -28,7 +28,7 @@ jobs:
         id: "test"
       - name: Run tests
         run: |
-          go test
+          go test -run ^Test.*$
       - name: Run benchmark
         run: |
           go test -bench BenchmarkTest -run ^BenchmarkTest$
