@@ -20,10 +20,8 @@ func TestNewLexer(t *testing.T) {
 
 	for _, sectn := range las.Sections {
 		fmt.Printf("\n\n===========\n%s\n===========\n\n", sectn.Name)
+		printData(sectn.Data)
 	}
-
-	fmt.Println("Version :", las.Version())
-	fmt.Println("Wrapped?", las.IsWrapped())
 }
 
 func printData(data []Line) {

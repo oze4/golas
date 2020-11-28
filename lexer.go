@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"io"
-	"strings"
 )
 
 // HandlerFunc func used as lexer state
@@ -53,7 +52,7 @@ func (l *Lexer) Start(hf HandlerFunc) {
 
 // emit places a token on our tokens chan
 func (l *Lexer) emit(t TokenType) {
-	l.tokens <- Token{t, strings.TrimSpace(l.buffer.String())}
+	l.tokens <- Token{t, l.buffer.String()}
 	l.buffer.Reset()
 }
 
