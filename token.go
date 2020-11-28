@@ -25,14 +25,3 @@ const (
 	TData
 	TDescription
 )
-
-// constant flags
-const (
-	CharComment  rune = '#'
-	CharData     rune = ':'
-	CharSection  rune = '~'
-	CharEOF      rune = -1
-	CharNewLine  rune = '\n'
-	CharDot      rune = '.'
-	CharMnemonic      = CharDot
-)

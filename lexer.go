@@ -66,17 +66,16 @@ func (l *Lexer) overwriteBuffer(s string) {
 func (l *Lexer) step() {
 	ch, _, err := l.reader.ReadRune()
 	if err != nil {
-		ch = CharEOF
+		ch = -1 // Use -1 to signal EOF
 	}
 	// If no error, increment position before moving on
 	l.position++
 
 	switch ch {
-	case CharNewLine:
+	case '\n':
 		l.line++
-		l.position = 0
-		l.dots = 0
-	case CharDot:
+		l.position, l.dots = 0, 0
+	case '.':
 		l.dots = l.dots + 1
 	}
 
@@ -86,7 +85,7 @@ func (l *Lexer) step() {
 
 // stepUntil reads from current line position until we read a certain rune
 func (l *Lexer) stepUntil(char rune) {
-	for l.char != CharNewLine {
+	for l.char != '\n' {
 		l.step()
 	}
 }

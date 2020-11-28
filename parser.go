@@ -51,11 +51,11 @@ func Parse(r io.Reader) *LAS {
 
 // HandleBegin is a state function
 func HandleBegin(lexer *Lexer) HandlerFunc {
-	if lexer.char == CharSection {
+	if lexer.char == '~' {
 		return HandleSection
-	} else if lexer.char == CharComment {
+	} else if lexer.char == '#' {
 		return HandleComment
-	} else if lexer.char == CharMnemonic {
+	} else if lexer.char == '.' {
 		return HandleMnemonic
 	} else {
 		lexer.step()
@@ -96,7 +96,7 @@ func HandleSection(lexer *Lexer) HandlerFunc {
 		t = TSectionCustom
 	}
 
-	lexer.stepUntil(CharNewLine)
+	lexer.stepUntil('\n')
 	// If not custom section, use hard coded string as name
 	if t != TSectionCustom {
 		lexer.overwriteBuffer(s)
@@ -107,7 +107,7 @@ func HandleSection(lexer *Lexer) HandlerFunc {
 
 // HandleComment lexes a comment within a line
 func HandleComment(lexer *Lexer) HandlerFunc {
-	for lexer.char != CharNewLine {
+	for lexer.char != '\n' {
 		lexer.step()
 	}
 	lexer.emit(TComment)
@@ -116,6 +116,7 @@ func HandleComment(lexer *Lexer) HandlerFunc {
 
 // HandleMnemonic lexes a mnemonic within a non-ascii log data line
 func HandleMnemonic(lexer *Lexer) HandlerFunc {
+	// Mnemonic only valid if it is the first dot on a line
 	if lexer.dots == 1 {
 		lexer.truncate()
 		lexer.emit(TMnemonic)
@@ -136,7 +137,7 @@ func HandleUnits(lexer *Lexer) HandlerFunc {
 
 // HandleLineData lexes data within a non-ascii log data line
 func HandleLineData(lexer *Lexer) HandlerFunc {
-	for lexer.char != CharData {
+	for lexer.char != ':' {
 		lexer.step()
 	}
 	lexer.truncate()
