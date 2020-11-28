@@ -38,9 +38,6 @@ func main() {
 Which gives us...
 
 ```
-API server listening at: 127.0.0.1:20099
-
-
 ===========
 Version Information
 ===========
