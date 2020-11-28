@@ -22,10 +22,10 @@ type Lexer struct {
 }
 
 // NewLexer creates a new Lexer
-func NewLexer(r io.Reader) *Lexer {
-	return &Lexer{
+func NewLexer(r io.Reader) Lexer {
+	return Lexer{
 		reader: bufio.NewReader(r),
-		tokens: make(chan Token, 1),
+		tokens: make(chan Token, 3),
 		buffer: &bytes.Buffer{},
 	}
 }
