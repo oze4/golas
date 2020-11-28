@@ -1,8 +1,5 @@
 package golas
 
-// CWLS LAS 2.0 Standard
-// http://www.cwls.org/wp-content/uploads/2014/09/LAS_20_Update_Jan2014.pdf
-
 // TokenType represents a lexical token type
 type TokenType uint
 
@@ -16,19 +13,26 @@ type Token struct {
 const (
 	TEndOfFile TokenType = iota
 	TComment
-	// Sections : Required
 	TVersionInformation
 	TWellInformation
 	TCurveInformation
 	TASCIILogData
-	// Sections : Optional
 	TParameterInformation
 	TOther
-	// Sections : Custom
 	TSectionCustom
-	// Line Delimeters
 	TMnemonic
 	TUnits
 	TData
 	TDescription
+)
+
+// constant flags
+const (
+	CharComment  rune = '#'
+	CharData     rune = ':'
+	CharSection  rune = '~'
+	CharEOF      rune = -1
+	CharNewLine  rune = '\n'
+	CharDot      rune = '.'
+	CharMnemonic      = CharDot
 )

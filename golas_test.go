@@ -14,30 +14,21 @@ func TestNewLexer(t *testing.T) {
 
 	las := Parse(r)
 
-	printData := func(data []Line) {
-		for _, line := range data {
-			fmt.Println("Mnemonic\t==", line.Mnem, "\nData\t\t==", line.Data, "\nUnits\t\t==", line.Units, "\nDesc\t\t==", line.Description)
-			fmt.Println("-----------------------------------------------------------------------------------")
-		}
+	if len(las.Sections) > 5 {
+		t.Fatalf("expected 5 sections : got %d", len(las.Sections))
 	}
 
-	fmt.Printf("\n\n===========\nVersion Info\n===========\n\n")
-	printData(las.VersionInformation.Data)
+	for _, sectn := range las.Sections {
+		fmt.Printf("\n\n===========\n%s\n===========\n\n", sectn.Name)
+	}
 
-	fmt.Printf("\n\n===========\nWell Info\n===========\n\n")
-	printData(las.WellInformation.Data)
+	fmt.Println("Version :", las.Version())
+	fmt.Println("Wrapped?", las.IsWrapped())
+}
 
-	fmt.Printf("\n\n===========\nCurve Info\n===========\n\n")
-	printData(las.CurveInformation.Data)
-
-	fmt.Printf("\n\n===========\nParam Info\n===========\n\n")
-	printData(las.ParameterInformation.Data)
-
-	fmt.Printf("\n\n===========\nOther Info\n===========\n\n")
-	printData(las.Other.Data)
-
-	for _, customSectn := range las.CustomSections {
-		fmt.Printf("\n\n===========\n%s\n===========\n\n", customSectn.Name)
-		printData(customSectn.Data)
+func printData(data []Line) {
+	for _, line := range data {
+		fmt.Println("Mnemonic\t==", line.Mnem, "\nData\t\t==", line.Data, "\nUnits\t\t==", line.Units, "\nDesc\t\t==", line.Description)
+		fmt.Println("-----------------------------------------------------------------------------------")
 	}
 }

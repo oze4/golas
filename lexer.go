@@ -4,18 +4,22 @@ import (
 	"bufio"
 	"bytes"
 	"io"
+	"strings"
 )
 
-// Lexer is a lexer
+// HandlerFunc func used as lexer state
+type HandlerFunc func(*Lexer) HandlerFunc
+
+// Lexer can perform lexical analysis on .las files
 type Lexer struct {
-	char             rune
-	handler          HandlerFunc
-	isFirstDotOnLine bool
-	line             int
-	linePosition     int
-	reader           *bufio.Reader
-	tokens           chan Token
-	value            *bytes.Buffer
+	buffer   *bytes.Buffer
+	char     rune
+	dots     int
+	handler  HandlerFunc
+	line     int
+	position int
+	reader   *bufio.Reader
+	tokens   chan Token
 }
 
 // NewLexer creates a new Lexer
@@ -23,98 +27,72 @@ func NewLexer(r io.Reader) *Lexer {
 	return &Lexer{
 		reader: bufio.NewReader(r),
 		tokens: make(chan Token, 1),
-		value:  &bytes.Buffer{},
+		buffer: &bytes.Buffer{},
 	}
 }
 
 // NextToken reads the next token from our tokens chan
-func (lexer *Lexer) NextToken() Token {
+func (l *Lexer) NextToken() Token {
 	for {
 		select {
-		case token := <-lexer.tokens:
-			lexer.value.Reset()
+		case token := <-l.tokens:
 			return token
 		default:
-			lexer.handler = lexer.handler(lexer)
+			if l.handler == nil {
+				panic("private field `Lexer.handler` is nil : unable to acquire token without state")
+			}
+			l.handler = l.handler(l)
 		}
 	}
 }
 
-// Run runs some handler
-func (lexer *Lexer) Run(handler HandlerFunc) {
-	lexer.handler = handler
+// Start sets our handler, in turn starting lexical analysis
+func (l *Lexer) Start(hf HandlerFunc) {
+	l.handler = hf
 }
 
-// Start is shorthand for lexer.Run(HandleBegin)
-func (lexer *Lexer) Start() {
-	lexer.Run(HandleBegin)
+// emit places a token on our tokens chan
+func (l *Lexer) emit(t TokenType) {
+	l.tokens <- Token{t, strings.TrimSpace(l.buffer.String())}
+	l.buffer.Reset()
 }
 
-// State returns the current handler of our lexer
-func (lexer *Lexer) State() HandlerFunc {
-	return lexer.handler
-}
-
-// emit places a token of type t on our tokens chan
-func (lexer *Lexer) emit(t TokenType) {
-	lexer.tokens <- Token{t, lexer.value.String()}
-}
-
-// dumpLine reads from current line position until
-// end of line, without writing to our value buffer
-func (lexer *Lexer) dumpLine() {
-	for lexer.char != Flags.NewLine {
-		lexer.step()
-	}
-	lexer.value.Reset()
-}
-
-func (lexer *Lexer) isLinePositionAt(i int) bool {
-	if lexer.linePosition != i {
-		return false
-	}
-	return true
+// overwriteBuffer clears our buffer then writes a string to it
+func (l *Lexer) overwriteBuffer(s string) {
+	l.buffer.Reset()
+	l.buffer.WriteString(s)
 }
 
 // step consumes the next rune from the current line
-func (lexer *Lexer) step() {
-	ch, _, err := lexer.reader.ReadRune()
+func (l *Lexer) step() {
+	ch, _, err := l.reader.ReadRune()
 	if err != nil {
-		ch = Flags.EOF
+		ch = CharEOF
+	}
+	// If no error, increment position before moving on
+	l.position++
+
+	switch ch {
+	case CharNewLine:
+		l.line++
+		l.position = 0
+		l.dots = 0
+	case CharDot:
+		l.dots = l.dots + 1
 	}
 
-	if ch == Flags.NewLine {
-		lexer.line++
-		lexer.linePosition, lexer.isFirstDotOnLine = 0, false
-	} else {
-		lexer.linePosition++
-	}
-
-	if ch == '.' {
-		if !lexer.isFirstDotOnLine {
-			lexer.isFirstDotOnLine = true
-		} else {
-			lexer.isFirstDotOnLine = false
-		}
-	}
-
-	lexer.value.WriteRune(ch)
-	lexer.char = ch
+	l.buffer.WriteRune(ch)
+	l.char = ch
 }
 
-// Flags are a rune representation of a TokenType
-var Flags = struct {
-	Comment  rune
-	Data     rune
-	Section  rune
-	EOF      rune
-	NewLine  rune
-	Mnemonic rune
-}{
-	Comment:  '#',
-	Data:     ':',
-	Section:  '~',
-	EOF:      rune(-1),
-	NewLine:  '\n',
-	Mnemonic: '.',
+// stepUntil reads from current line position until we read a certain rune
+func (l *Lexer) stepUntil(char rune) {
+	for l.char != CharNewLine {
+		l.step()
+	}
+}
+
+// truncate our buffer by 1. If our buffer were a string, this removes the last character
+func (l *Lexer) truncate() {
+	l.buffer.Truncate(l.buffer.Len() - 1)
 }

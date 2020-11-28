@@ -47,8 +47,8 @@ RM  .OHMM     2.62                 : RM           - RESISTIVITY OF MUD
 RMC .OHMM     0                    : RMC          - RESISTIVITY OF MUD CAKE
 RMF .OHMM     1.02                 : RMF          - RESISTIVITY OF MUD FILTRATE
 SUFT.C        0                    : SUFT         - SURFACE TEMPERATURE
-~ZEBRA
-THIS.IS A: TEST
+~My Custom Section
+MNEM_VAL.UNIT_VAL DATA_VAL: DESCRIPTION_VAL
 ~A  DEPTH     PHID     PHIN       GR      CAL     RESD
   390.000    0.199    0.457   82.478  238.379    2.923
   390.250    0.208    0.456   86.413  238.331    2.925

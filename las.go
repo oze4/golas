@@ -1,14 +1,46 @@
 package golas
 
+import (
+	"strings"
+)
+
 // LAS represents a .las file
 type LAS struct {
-	VersionInformation   Section
-	WellInformation      Section
-	CurveInformation     Section
-	ParameterInformation Section
-	Other                Section
-	ASCIILogData         LogData
-	CustomSections       []Section
+	Sections []Section
+}
+
+// Version returns the las file version
+func (las *LAS) Version() string {
+	var result string
+	for sectionIndex := range las.Sections {
+		if strings.ToLower(las.Sections[sectionIndex].Name) == "version information" {
+			for lineIndex := range las.Sections[sectionIndex].Data {
+				if strings.ToLower(las.Sections[sectionIndex].Data[lineIndex].Mnem) == "vers" {
+					result = las.Sections[sectionIndex].Data[lineIndex].Data
+					goto Done
+				}
+			}
+		}
+	}
+Done:
+	return result
+}
+
+// IsWrapped returns whether or not the las file is wrapped
+func (las *LAS) IsWrapped() bool {
+	var wrapped bool
+	for sectionIndex := range las.Sections {
+		if strings.ToLower(las.Sections[sectionIndex].Name) == "version information" {
+			for lineIndex := range las.Sections[sectionIndex].Data {
+				if strings.ToLower(las.Sections[sectionIndex].Data[lineIndex].Mnem) == "wrap" {
+					wrapped = strings.ToLower(las.Sections[sectionIndex].Data[lineIndex].Data) == "yes"
+					goto Done
+				}
+			}
+		}
+	}
+Done:
+	return wrapped
 }
 
 // Line represents a header line in a .las file section
@@ -26,5 +58,5 @@ type LogData []interface{}
 type Section struct {
 	Name     string
 	Data     []Line
-	Comments string
+	Comments []string
 }
