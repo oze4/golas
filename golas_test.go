@@ -7,10 +7,15 @@ import (
 	"testing"
 )
 
-func TestNewLexer(t *testing.T) {
+func TestHelloWorld(t *testing.T) {
 	lasReader, _ := os.Open("samples/unwrapped.las")
 	las := Parse(lasReader)
 	prettyPrintStructAsJSON(las)
+}
+
+func BenchmarkTest(b *testing.B) {
+	lasReader, _ := os.Open("samples/unwrapped.las")
+	Parse(lasReader)
 }
 
 func prettyPrintStructAsJSON(v interface{}) {
