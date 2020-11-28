@@ -8,20 +8,17 @@ import (
 
 // Parse parses a las file
 func Parse(r io.Reader) *LAS {
-	var (
-		section *Section
-		line    Line
-		token   Token
-	)
-
+	var section *Section
+	var line Line
+	var token Token
 	las := &LAS{}
 	lexer := NewLexer(r)
+
 	lexer.Start(HandleBegin)
 
 	for {
 		token = lexer.NextToken()
 		token.Value = strings.TrimSpace(token.Value)
-
 		if token.Type == TEndOfFile {
 			break
 		}
@@ -33,9 +30,7 @@ func Parse(r io.Reader) *LAS {
 			}
 			section = &Section{Name: token.Value}
 		case TASCIILogData:
-			if section != nil {
-				las.Sections = append(las.Sections, *section)
-			}
+			las.Sections = append(las.Sections, *section)
 			return las
 		case TMnemonic:
 			line = Line{Mnem: token.Value}
@@ -76,8 +71,8 @@ func HandleSection(lexer *Lexer) HandlerFunc {
 
 	var t TokenType
 	var s string
-
 	lexer.step()
+
 	switch lexer.char {
 	case 'V':
 		s = "Version Information"
@@ -101,9 +96,8 @@ func HandleSection(lexer *Lexer) HandlerFunc {
 		t = TSectionCustom
 	}
 
-	// Should read full line before emitting
 	lexer.stepUntil(CharNewLine)
-	// If not a custom section overwrite buffer with hard coded string
+	// If not custom section, use hard coded string as name
 	if t != TSectionCustom {
 		lexer.overwriteBuffer(s)
 	}
@@ -134,7 +128,6 @@ func HandleMnemonic(lexer *Lexer) HandlerFunc {
 
 // HandleUnits lexes units within a non-ascii log data line
 func HandleUnits(lexer *Lexer) HandlerFunc {
-	lexer.step()
 	for lexer.char != ' ' {
 		lexer.step()
 	}
