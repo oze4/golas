@@ -40,7 +40,7 @@ func Parse(r io.Reader) *LAS {
 			line.Data = token.Value
 		case TDescription:
 			line.Description = token.Value
-			section.Data = append(section.Data, line)
+			section.Lines = append(section.Lines, line)
 		case TComment:
 			section.Comments = append(section.Comments, token.Value)
 		}
@@ -117,11 +117,9 @@ func HandleComment(lexer *Lexer) HandlerFunc {
 // HandleMnemonic lexes a mnemonic within a non-ascii log data line
 func HandleMnemonic(lexer *Lexer) HandlerFunc {
 	if lexer.dots == 1 {
-		if lexer.char == CharMnemonic {
-			lexer.truncate()
-			lexer.emit(TMnemonic)
-			return HandleUnits
-		}
+		lexer.truncate()
+		lexer.emit(TMnemonic)
+		return HandleUnits
 	}
 	return HandleBegin
 }

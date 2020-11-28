@@ -1,32 +1,22 @@
 package golas
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"testing"
 )
 
 func TestNewLexer(t *testing.T) {
-	r, e := os.Open("samples/unwrapped.las")
-	if e != nil {
-		panic("Unable to open file")
-	}
-
-	las := Parse(r)
-
-	if len(las.Sections) > 5 {
-		t.Fatalf("expected 5 sections : got %d", len(las.Sections))
-	}
-
-	for _, sectn := range las.Sections {
-		fmt.Printf("\n\n===========\n%s\n===========\n\n", sectn.Name)
-		printData(sectn.Data)
-	}
+	lasReader, _ := os.Open("samples/unwrapped.las")
+	las := Parse(lasReader)
+	prettyPrintStructAsJSON(las)
 }
 
-func printData(data []Line) {
-	for _, line := range data {
-		fmt.Println("Mnemonic\t==", line.Mnem, "\nData\t\t==", line.Data, "\nUnits\t\t==", line.Units, "\nDesc\t\t==", line.Description)
-		fmt.Println("-----------------------------------------------------------------------------------")
+func prettyPrintStructAsJSON(v interface{}) {
+	if j, e := json.MarshalIndent(v, "", "    "); e != nil {
+		fmt.Printf("Error : %s \n", e.Error())
+	} else {
+		fmt.Printf("%s\n", string(j))
 	}
 }

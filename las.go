@@ -9,31 +9,14 @@ type LAS struct {
 	Sections []Section
 }
 
-// Version returns the las file version
-func (las *LAS) Version() string {
-	var result string
-	for sectionIndex := range las.Sections {
-		if strings.ToLower(las.Sections[sectionIndex].Name) == "version information" {
-			for lineIndex := range las.Sections[sectionIndex].Data {
-				if strings.ToLower(las.Sections[sectionIndex].Data[lineIndex].Mnem) == "vers" {
-					result = las.Sections[sectionIndex].Data[lineIndex].Data
-					goto Done
-				}
-			}
-		}
-	}
-Done:
-	return result
-}
-
 // IsWrapped returns whether or not the las file is wrapped
 func (las *LAS) IsWrapped() bool {
 	var wrapped bool
 	for sectionIndex := range las.Sections {
 		if strings.ToLower(las.Sections[sectionIndex].Name) == "version information" {
-			for lineIndex := range las.Sections[sectionIndex].Data {
-				if strings.ToLower(las.Sections[sectionIndex].Data[lineIndex].Mnem) == "wrap" {
-					wrapped = strings.ToLower(las.Sections[sectionIndex].Data[lineIndex].Data) == "yes"
+			for lineIndex := range las.Sections[sectionIndex].Lines {
+				if strings.ToLower(las.Sections[sectionIndex].Lines[lineIndex].Mnem) == "wrap" {
+					wrapped = strings.ToLower(las.Sections[sectionIndex].Lines[lineIndex].Data) == "yes"
 					goto Done
 				}
 			}
@@ -41,6 +24,23 @@ func (las *LAS) IsWrapped() bool {
 	}
 Done:
 	return wrapped
+}
+
+// Version returns the las file version
+func (las *LAS) Version() string {
+	var result string
+	for sectionIndex := range las.Sections {
+		if strings.ToLower(las.Sections[sectionIndex].Name) == "version information" {
+			for lineIndex := range las.Sections[sectionIndex].Lines {
+				if strings.ToLower(las.Sections[sectionIndex].Lines[lineIndex].Mnem) == "vers" {
+					result = las.Sections[sectionIndex].Lines[lineIndex].Data
+					goto Done
+				}
+			}
+		}
+	}
+Done:
+	return result
 }
 
 // Line represents a header line in a .las file section
@@ -57,6 +57,6 @@ type LogData []interface{}
 // Section represents a .las file section
 type Section struct {
 	Name     string
-	Data     []Line
+	Lines    []Line
 	Comments []string
 }
