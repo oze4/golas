@@ -12,17 +12,18 @@
 The following example uses [this](/samples/unwrapped.las) .las file as input
 
 ```golang
-func TestNewLexer(t *testing.T) {
+package main
+
+import "os"
+import "github.com/oze4/golas"
+
+func main() {
 	r, e := os.Open("samples/unwrapped.las")
 	if e != nil {
 		panic("Unable to open file")
 	}
 
-	las := Parse(r)
-
-	if len(las.Sections) > 5 {
-		t.Fatalf("expected 5 sections : got %d", len(las.Sections))
-	}
+	las := golas.Parse(r)
 
 	for _, sectn := range las.Sections {
 		fmt.Printf("\n\n===========\n%s\n===========\n\n", sectn.Name)
