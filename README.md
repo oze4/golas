@@ -27,14 +27,10 @@ func main() {
 
 	for _, sectn := range las.Sections {
 		fmt.Printf("\n\n===========\n%s\n===========\n\n", sectn.Name)
-		printData(sectn.Data)
-	}
-}
-
-func printData(data []Line) {
-	for _, line := range data {
-		fmt.Println("Mnemonic\t==", line.Mnem, "\nData\t\t==", line.Data, "\nUnits\t\t==", line.Units, "\nDesc\t\t==", line.Description)
-		fmt.Println("-----------------------------------------------------------------------------------")
+		for _, line := range sectn.Data {
+			fmt.Println("Mnemonic\t==", line.Mnem, "\nData\t\t==", line.Data, "\nUnits\t\t==", line.Units, "\nDesc\t\t==", line.Description)
+			fmt.Println("-----------------------------------------------------------------------------------")
+		}
 	}
 }
 ```
