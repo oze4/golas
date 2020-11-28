@@ -4,7 +4,7 @@
 ~WELL INFORMATION BLOCK
 #MNEM.UNIT           DATA                    DESCRIPTION OF MNEMONIC
 #---------    -------------------            -------------------------------
-# Generated from Intellog Unique Number	CW_73_75/WELL/2722
+# Generated from Intellog Unique Number	CW_0099_0099/WELL/0099
 WELL.         NORVEHC MGSU 1 MITSUE 01-01    : Well_name    - WELL
 LOC .         00/01-01-073-05W5/0            : Location     - LOCATION
 UWI .         00/01-01-073-05W5/0            : Uwi          - UNIQUE WELL ID
